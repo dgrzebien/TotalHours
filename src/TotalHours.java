@@ -16,7 +16,7 @@ public class TotalHours {
         
 
         BufferedReader br = new BufferedReader(
-            new FileReader("C:/temp/development/TotalHours/Employee_Hours.csv")
+            new FileReader("D:/development/TotalHours/Employee_Hours.csv")
         );
 
         System.out.println("First Name  LastName    Hours   OT");
@@ -32,10 +32,14 @@ public class TotalHours {
 
                 while((line = br.readLine()) != null) {
                     //tokens = line.split(",");
-                    tokens = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+                    tokens = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
                     if(tokens[0].equals("Totals:")) {
                         //employeeMap.put(firstName + lastName, tokens[7] + " " + tokens[8]);
+                        tokens[7] = tokens[7].replace(",","");
+                        tokens[7] = tokens[7].replace("\"", "");
+                        tokens[8] = tokens[8].replace(",","");
+                        tokens[8] = tokens[8].replace("\"", "");
                         employeeHours.add(tokens[7] + "," + tokens[8]);
                         employeeMap.put(firstName + " " + lastName, employeeHours);
                         System.out.println(firstName + "    " + lastName + "    " +
@@ -49,17 +53,21 @@ public class TotalHours {
 
         br.close();
 
+        int count = 0;
+
         for(String key : employeeMap.keySet()) {
             List<String> hours = new ArrayList<String>();
             
             hours = employeeMap.get(key);
+            count++;
 
             for(String v : hours) {
-                String[] splits = v.split(",");
+                //String[] splits = v.split(",");
+                String[] splits = v.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 float totalHours = Float.parseFloat(splits[0]);
                 totalHours = totalHours + Float.parseFloat(splits[1]);
 
-                System.out.println(key + "Total Hours = " + totalHours);
+                System.out.println(count + ": " + key + " Total Hours = " + totalHours);
             }
         }
     }
