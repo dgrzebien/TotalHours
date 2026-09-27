@@ -6,6 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 public class TotalHours {
+
+    public static float calculateSickLeave(String hours, String OT) {
+        float h = Float.parseFloat(hours);
+        float overtime = Float.parseFloat(OT);
+
+        return (h + overtime) / 30;
+    }
+
     public static void main(String[] args) throws Exception {
         String line;
         String[] tokens;
@@ -13,6 +21,7 @@ public class TotalHours {
         String lastName;
         Map<String, List<String>> employeeMap = new HashMap<String, List<String>>();
         List<String> employeeHours;// = new ArrayList<String>();
+        double sickLeave;
         
 
         BufferedReader br = new BufferedReader(
@@ -40,10 +49,11 @@ public class TotalHours {
                         tokens[7] = tokens[7].replace("\"", "");
                         tokens[8] = tokens[8].replace(",","");
                         tokens[8] = tokens[8].replace("\"", "");
-                        employeeHours.add(tokens[7] + "," + tokens[8]);
+                        sickLeave = Math.round(calculateSickLeave(tokens[7], tokens[8]) * 100.0) / 100.0;
+                        employeeHours.add(tokens[7] + "," + tokens[8] + "," + sickLeave);
                         employeeMap.put(firstName + " " + lastName, employeeHours);
                         System.out.println(firstName + "    " + lastName + "    " +
-                            tokens[7] + "   " + tokens[8]);
+                            tokens[7] + "   " + tokens[8] + sickLeave);
                         line = br.readLine();
                         break;
                     }
@@ -66,8 +76,9 @@ public class TotalHours {
                 String[] splits = v.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 float totalHours = Float.parseFloat(splits[0]);
                 totalHours = totalHours + Float.parseFloat(splits[1]);
+                float leave = Float.parseFloat(splits[2]);
 
-                System.out.println(count + ": " + key + " Total Hours = " + totalHours);
+                System.out.println(count + ": " + key + " Total Hours = " + totalHours + " " + leave);
             }
         }
     }
